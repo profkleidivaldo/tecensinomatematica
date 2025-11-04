@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>JESUS, PRESENTE DE DEUS</title>
+<style>
+body {
+  font-family: Segoe UI, sans-serif;
+  background: url('https://bkpsitecpsnew.blob.core.windows.net/uploadsitecps/sites/1/2022/10/top-view-calculator-notebook-frame-scaled.jpg') no-repeat center center fixed;
+  background-size: cover;
+  margin: 0;
+  padding: 20px;
+  color: #333;
+}
+h1 {
+  text-align: center;
+  color: #0e7490;
+  background: rgba(255,255,255,0.8);
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 10px;
+  animation: fadeIn 1s ease-in;
+}
+.timeline {
+  position: relative;
+  margin: 40px auto;
+  max-width: 600px;
+}
+.step {
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.6s forwards;
+}
+.circle {
+  min-width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #38bdf8;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-right: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  transition: transform 0.3s;
+}
+.circle:hover { transform: scale(1.2); }
+.content {
+  background: rgba(255,255,255,0.85);
+  padding: 12px 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.3s;
+}
+.content:hover { transform: translateX(6px); }
+.content h3 { margin: 0; font-size: 1rem; color: #0e7490; }
+.content a { color: #22c55e; text-decoration: none; font-weight: bold; }
+.content a:hover { text-decoration: underline; }
+@keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+</style>
+</head>
+<body>
+<h1>Tecnologias Educacionais Aplicadas ao Ensino de Matemática</h1>
+<div class="timeline" id="timeline"></div>
+
+<script>
+// === CONFIGURAÇÃO ===
+const usuario = "profkleidivaldo";
+const repositorio = "licao";
+const pasta = "licoes";
+
+// === FUNÇÃO PRINCIPAL ===
+fetch(`https://api.github.com/repos/${usuario}/${repositorio}/contents/${pasta}`)
+  .then(r => r.json())
+  .then(arquivos => {
+    const timeline = document.getElementById("timeline");
+    let contador = 1;
+    arquivos
+      .filter(a => a.name.endsWith(".html"))
+      .sort((a,b) => a.name.localeCompare(b.name, 'pt', { numeric: true }))
+      .forEach((a, i) => {
+        const step = document.createElement("div");
+        step.className = "step";
+        step.style.animationDelay = `${i * 0.2}s`;
+
+        const circle = document.createElement("div");
+        circle.className = "circle";
+        circle.textContent = contador++;
+
+        const content = document.createElement("div");
+        content.className = "content";
+        const titulo = a.name.replace(".html", "").replace(/[-_]/g, " ");
+        content.innerHTML = `
+          <h3>${titulo}</h3>
+          <a href="${pasta}/${a.name}" target="_blank">▶ Acessar aula</a>
+        `;
+
+        step.appendChild(circle);
+        step.appendChild(content);
+        timeline.appendChild(step);
+      });
+  })
+  .catch(err => {
+    document.getElementById("timeline").innerHTML = 
+      "<p style='background:white;padding:10px;border-radius:6px;'>Erro ao carregar as lições. Verifique o nome da pasta ou repositório.</p>";
+    console.error(err);
+  });
+</script>
+</body>
+</html>
